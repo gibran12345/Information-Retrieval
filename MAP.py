@@ -4,9 +4,6 @@ import glob
 qpath = 'C:\\Users\\Malbolge\\Desktop\\CF\\queries\\'
 qdocspath = 'C:\\Users\\Malbolge\\Desktop\\CF\\queriedocs\\'
 
-N = set() # Documntos relevantes
-R = set() # Documentos retornados (top 100)
-
 qpathlist = glob.glob(qpath + '*.txt')
 qdocspathlist = glob.glob(qdocspath + '*.txt')
 
@@ -21,10 +18,17 @@ for relevantDocument, returnedDocument in zip(qpathlist, qdocspathlist):
             rdocnumbers = query.readline()
             adocnubmers = querydoc.readline()
             
-            N = {int(number) for number in re.split(r' ', rdocnumbers) if number}
-            R = {int(number) for number in re.split(r' ', adocnubmers) if number}
+            S = []
+            N = [int(number) for number in re.split(r' ', rdocnumbers) if number] # Relevant Documents
+            R = [int(number) for number in re.split(r' ', adocnubmers) if number] # Returned Documents (top 100)
 
-            precision += len(N & R) / len(R)
+            avep = 0.0
+            for i, number in enumerate(R, 1):
+                if number in N:
+                    S.append(number)
+                    avep += len(S) / i
+
+            precision += avep / len(N)
 
 print(precision)
 print(precision / 100)
